@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Jaguar AI</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #080808;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+    .app {
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
+      padding: 22px 16px 90px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .logo {
+      width: 48px;
+      height: 48px;
+      border: 1px solid #333;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: #111;
+    }
+    h1 { font-size: 21px; margin: 0; letter-spacing: 2px; }
+    .sub { color: #777; font-size: 11px; margin-top: 5px; }
+    .welcome {
+      background: linear-gradient(135deg, #171717, #0e0e0e);
+      border: 1px solid #292929;
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .welcome small { color: #777; }
+    .welcome h2 { margin: 9px 0 5px; font-size: 23px; }
+    .welcome p { margin: 0; color: #888; font-size: 14px; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .message {
+      background: #151515;
+      border: 1px solid #292929;
+      padding: 14px;
+      border-radius: 17px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .message.user { background: #202020; }
+    .message strong { display: block; margin-bottom: 5px; }
+    .chat-box { display: flex; gap: 8px; margin-top: 14px; }
+    input, textarea {
+      width: 100%;
+      background: #111;
+      border: 1px solid #303030;
+      color: white;
+      border-radius: 15px;
+      padding: 13px;
+      font-size: 14px;
+      outline: none;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button {
+      border: 0;
+      cursor: pointer;
+      color: white;
+      background: #242424;
+      border-radius: 15px;
+      padding: 12px 16px;
+      font-weight: bold;
+    }
+    button:hover { background: #333; }
+    .primary { background: #f0f0f0; color: #090909; }
+    .primary:hover { background: #ccc; }
+    .tools {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .tool {
+      background: #121212;
+      border: 1px solid #292929;
+      border-radius: 20px;
+      padding: 20px;
+      cursor: pointer;
+    }
+    .tool:hover { border-color: #555; }
+    .tool-icon { font-size: 26px; margin-bottom: 12px; }
+    .tool-title { font-weight: bold; }
+    .tool-desc { color: #777; font-size: 12px; margin-top: 6px; line-height: 1.4; }
+    .panel {
+      background: #121212;
+      border: 1px solid #292929;
+      border-radius: 22px;
+      padding: 20px;
+    }
+    .panel h3 { margin-top: 0; }
+    .panel p { color: #888; font-size: 13px; line-height: 1.5; }
+    .bottom-nav {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
+      max-width: 680px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      padding: 7px;
+      background: #151515;
+      border: 1px solid #292929;
+      border-radius: 21px;
+      z-index: 10;
+    }
+    .nav-btn {
+      background: transparent;
+      color: #777;
+      padding: 9px 3px;
+      font-size: 11px;
+    }
+    .nav-btn.active { background: #292929; color: white; }
+    .nav-icon { display: block; font-size: 18px; margin-bottom: 3px; }
+    .result {
+      color: #aaa;
+      font-size: 13px;
+      margin-top: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    @media (max-width: 380px) {
+      .app { padding-left: 12px; padding-right: 12px; }
+      .tools { gap: 8px; }
+      .tool { padding: 15px; }
+      .nav-btn { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="logo">🐆</div>
+      <div>
+        <h1>JAGUAR AI</h1>
+        <div class="sub">YOUR PERSONAL INTELLIGENCE</div>
+      </div>
+    </header>
+
+    <section class="welcome">
+      <small>Şəxsi köməkçin</small>
+      <h2>Salam, Yaqub. 🐆</h2>
+      <p>Bu gün nə etmək istəyirsən?</p>
+    </section>
+
+    <section id="chat" class="section active">
+      <div id="messages">
+        <div class="message">
+          <strong>Jaguar AI</strong>
+          Salam! Mən sənin şəxsi AI köməkçin olmağa hazıram. Mənə nə etmək istədiyini yaz.
+        </div>
+      </div>
+      <div class="chat-box">
+        <input id="chatInput" placeholder="Mənə bir şey yaz...">
+        <button class="primary" onclick="sendMessage()">Göndər</button>
+      </div>
+    </section>
+
+    <section id="create" class="section">
+      <div class="panel">
+        <h3>🎨 Şəkil yarat</h3>
+        <p>İstədiyin şəkli təsvir et. Sonrakı mərhələdə real image AI qoşacağıq.</p>
+        <textarea id="imagePrompt" placeholder="Məsələn: futuristik qara jaguar, neon şəhər, cinematic..."></textarea>
+        <button class="primary" style="margin-top:12px" onclick="prepareImagePrompt()">Prompt hazırla</button>
+        <div id="imageResult" class="result"></div>
+      </div>
+    </section>
+
+    <section id="code" class="section">
+      <div class="panel">
+        <h3>💻 Kod köməkçisi</h3>
+        <p>Yaratmaq istədiyin tətbiqi və ya kodu təsvir et.</p>
+        <textarea id="codePrompt" placeholder="Məsələn: mənə sadə portfolio saytı yarat..."></textarea>
+        <button class="primary" style="margin-top:12px" onclick="prepareCodePrompt()">Kod tapşırığını hazırla</button>
+        <div id="codeResult" class="result"></div>
+      </div>
+    </section>
+
+    <section id="files" class="section">
+      <div class="panel">
+        <h3>📁 Fayllar</h3>
+        <p>PDF, şəkil və sənədləri seç. Real analiz funksiyasını növbəti mərhələdə əlavə edəcəyik.</p>
+        <input type="file" id="fileInput">
+        <div id="fileResult" class="result"></div>
+      </div>
+    </section>
+
+    <section id="voice" class="section">
+      <div class="panel">
+        <h3>🎙️ Səsli köməkçi</h3>
+        <p>Səsli funksiyanı real AI mühərriki ilə növbəti mərhələdə birləşdirəcəyik.</p>
+        <button class="primary" onclick="testVoice()">🎙️ Səsi yoxla</button>
+        <div id="voiceResult" class="result"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="showSection('chat', this)">
+      <span class="nav-icon">💬</span>Chat
+    </button>
+    <button class="nav-btn" onclick="showSection('create', this)">
+      <span class="nav-icon">🎨</span>Create
+    </button>
+    <button class="nav-btn" onclick="showSection('code', this)">
+      <span class="nav-icon">💻</span>Code
+    </button>
+    <button class="nav-btn" onclick="showSection('files', this)">
+      <span class="nav-icon">📁</span>Files
+    </button>
+    <button class="nav-btn" onclick="showSection('voice', this)">
+      <span class="nav-icon">🎙️</span>Voice
+    </button>
+  </nav>
+
+  <script>
+    function showSection(id, btn) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const messages = document.getElementById('messages');
+      const user = document.createElement('div');
+      user.className = 'message user';
+      user.innerHTML = '<strong>Sən</strong>' + escapeHtml(text);
+      messages.appendChild(user);
+
+      const ai = document.createElement('div');
+      ai.className = 'message';
+      ai.innerHTML = '<strong>Jaguar AI</strong>Tapşırığını qəbul etdim. Real AI mühərriki qoşulduqda sənə həqiqi cavab verəcəyəm. 🐆';
+      messages.appendChild(ai);
+      input.value = '';
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function prepareImagePrompt() {
+      const text = document.getElementById('imagePrompt').value.trim();
+      document.getElementById('imageResult').textContent = text
+        ? 'Şəkil təsvirin qəbul edildi. Real image API növbəti mərhələdə qoşulacaq.'
+        : 'Əvvəlcə şəkli təsvir et.';
+    }
+
+    function prepareCodePrompt() {
+      const text = document.getElementById('codePrompt').value.trim();
+      document.getElementById('codeResult').textContent = text
+        ? 'Kod tapşırığın qəbul edildi. Real kod mühərriki növbəti mərhələdə qoşulacaq.'
+        : 'Əvvəlcə kod ideyanı yaz.';
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function() {
+      document.getElementById('fileResult').textContent = this.files.length
+        ? 'Seçildi: ' + this.files[0].name
+        : '';
+    });
+
+    function testVoice() {
+      const supported = 'speechSynthesis' in window;
+      document.getElementById('voiceResult').textContent = supported
+        ? 'Telefonun səs funksiyası dəstəklənir. Real AI səs bağlantısı növbəti mərhələdə əlavə olunacaq.'
+        : 'Bu brauzerdə səs dəstəyi tapılmadı.';
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+  </html>
+  
